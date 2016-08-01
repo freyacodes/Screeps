@@ -1,0 +1,19 @@
+{
+	"build_systems":
+	[
+		{
+		}
+	],
+	"folders":
+	[
+		{
+			"path": "dist"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings":
+	{
+	}
+}
