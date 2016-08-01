@@ -36,7 +36,7 @@ module.exports = {
         if(room.storage && room.storage.store.energy > 80000){
             desiredBuilders++;
         }
-        if(room.controller.level === 2){
+        if(room.controller.level === 2 || room.controller.level === 3){
             desiredBuilders++;
         }
         
