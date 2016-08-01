@@ -11,7 +11,7 @@ module.exports = {
         }
         
         //100 attempts
-        for (i = 0; i < 100; i++) {
+        for (i = 0; i < 10; i++) {
             var rand = structs[Math.floor(Math.random()*structs.length)];
             
             var xPlus = Math.floor(Math.random()*2) == 0;

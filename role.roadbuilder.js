@@ -30,12 +30,24 @@ module.exports = {
 	            }
 	        });
 	        
+	        var roadToRepair = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+	            filter: function(struct){
+	                return struct.structureType == STRUCTURE_ROAD && struct.hits+1000 < struct.hitsMax;
+	            }
+	        });
+	        
             if(targets.length) {
                 var target = targets[Math.floor(Math.random()*targets.length)];
                 var code = creep.build(target);
                 //console.log(code)
                 if(code == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
+                }
+            } else if(roadToRepair){
+                var code = creep.repair(roadToRepair);
+                //console.log(code)
+                if(code == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(roadToRepair);
                 }
             } else {
                 //No roads to work on, start repairing instead

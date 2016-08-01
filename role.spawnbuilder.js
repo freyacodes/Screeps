@@ -27,9 +27,17 @@ module.exports = {
         }
         
         if(creep.memory.isGathering){
-            var target = creep.pos.findClosestByRange(FIND_SOURCES)
-            if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+            var target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+            if(target){
+                if(creep.pickup(target) != OK){
+                    creep.moveTo(target)
+                }
+            } else {
+                target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+                if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
+                }
+                return;
             }
         } else {
             var target = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES, {

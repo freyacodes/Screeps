@@ -19,6 +19,10 @@ module.exports = {
         var desiredClaimnants = isReservation ? 2 : 0;//Note: The are CLAIM body parts, not claimnants
         var desiredRoadbuilders = isReservation ? 1 : 0;
         
+        if(room.energyCapacityAvailable == room.energyAvailable && Math.floor(0.5 + Math.random()*99 == 0)){
+            //desiredBuilders++;
+        }
+        
         if(room.storage && room.storage.store.energy > 10000){
             desiredBuilders++;
         }
@@ -26,6 +30,9 @@ module.exports = {
             desiredBuilders++;
         }
         if(room.storage && room.storage.store.energy > 60000){
+            desiredBuilders++;
+        }
+        if(room.storage && room.storage.store.energy > 80000){
             desiredBuilders++;
         }
         

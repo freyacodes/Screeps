@@ -42,7 +42,6 @@ module.exports = {
                         //return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
                     }
                 });
-                
                 if(!target && reservee){
                     var targets = reservee.find(FIND_MY_STRUCTURES, {
                         filter: function(structure){
@@ -75,7 +74,7 @@ module.exports = {
 	    var design = [];
 	    var spent = 0;
 	    
-	    budget = Math.min(1200, budget)
+	    budget = Math.min(1800, budget)
 	    
 	    //Add as many CARRY and MOVE as we can
 	    while(spent + 150 <= budget){
