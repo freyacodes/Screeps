@@ -6,6 +6,7 @@ var roleRepairman = require("role.upgrader");
 var roleClaimnant = require("role.claimnant");
 var roleRoadbuilder = require("role.roadbuilder");
 var roleCarrier = require('role.carrier');
+var rolesUtil = require("util.roles")
 
 module.exports = {
     run: function(room, isReservation, parent) {
@@ -35,6 +36,9 @@ module.exports = {
         if(room.storage && room.storage.store.energy > 80000){
             desiredBuilders++;
         }
+        if(room.controller.level === 2){
+            desiredBuilders++;
+        }
         
         if(!isReservation && room.find(FIND_STRUCTURES, {
             filter:function(struct) {
@@ -47,7 +51,7 @@ module.exports = {
         var spawnRoom = isReservation ? parent : room;
         var spawners = spawnRoom.find(FIND_MY_SPAWNS, {
             filter: function(spawn){
-                return !spawn.spawning
+                return !spawn.spawning;
             }
         })
         if(spawners.length == 0){
@@ -72,7 +76,7 @@ module.exports = {
             //Now count the CLAIM modules we have in use
             for(var name in Game.creeps){
                 if(Game.creeps[name].memory.home == room.name){
-                    var body = Game.creeps[name].body
+                    var body = Game.creeps[name].body;
                     for(var i  in body){
                         if(body[i].type == CLAIM){
                             
@@ -107,7 +111,7 @@ module.exports = {
         room.memory.harvesters = harvesters;
         //console.log("Harvesters: "+harvesters)
         
-        console.log(room+":"+claimnants+"/"+desiredClaimnants)
+        console.log(room+":"+claimnants+"/"+desiredClaimnants);
         
         //console.log(builders+":"+harvesters+":"+upgraders)
         
@@ -147,12 +151,24 @@ module.exports = {
         });
         
         if(spawns.length){
-            budget = budget + spawns.length * spawns[0].energyCapacity
+            budget = budget + spawns.length * spawns[0].energyCapacity;
         }
         if(exts.length){
-            budget = budget + exts.length * exts[0].energyCapacity
+            budget = budget + exts.length * exts[0].energyCapacity;
         }
         
         return budget;
+    },
+
+    spawnRole: function(spawn, roleName, mem, budget){
+        if(!mem){
+            mem = {};
+        }
+        if(!mem.home){
+            mem.home = spawn.room.name;
+        }
+        mem.role = roleName;
+        var role = rolesUtil[roleName];
+        return spawn.createCreep(role.getDesign(budget), undefined, mem);
     }
 };

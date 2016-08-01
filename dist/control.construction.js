@@ -11,7 +11,7 @@ module.exports = {
         }
         
         //100 attempts
-        for (i = 0; i < 10; i++) {
+        for (i = 0; i < 50; i++) {
             var rand = structs[Math.floor(Math.random()*structs.length)];
             
             var xPlus = Math.floor(Math.random()*2) == 0;
@@ -29,7 +29,7 @@ module.exports = {
             }
         }
         
-        console.log("Failed to find structure placement after 100 attempts at "+room.name);
+        console.log("Failed to find structure placement after 50 attempts at "+room.name);
     },
     
     runExtentionBuilder: function(room){

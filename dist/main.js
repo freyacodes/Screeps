@@ -118,6 +118,24 @@ module.exports.loop = function () {
                         var reservation = Game.rooms[room.memory.reservations[i]]
                         if(reservation){
                             spawner.run(reservation, true, room);
+                        } else {
+                            try{
+                                //We were probably wiped out by invaders. Make sure we respawn after 1500 ticks has gone by since the last one to spawn a harvester
+                                var mem = Memory.rooms[room.memory.reservations[i]];
+                                console.log(k+" "+mem.invadersLastDetected)
+                                if(mem){
+                                    var lastDetected = mem.invadersLastDetected;
+                                    if(lastDetected == null){
+                                        lastDetected = 0;
+                                    }
+                                    if(Game.time - lastDetected > 1500){
+                                        spawner.spawnRole(room.find(FIND_MY_SPAWNS)[0], "harvester", {home:room.memory.reservations[i]}, room.energyCapacityAvailable);
+                                        console.log("Spawned a new harvester in attempt to recover reservation.")
+                                    }
+                                }
+                            } catch(err){
+                                console.log("Error while recovering reservation: " + err)
+                            }
                         }
                     }
                 }
@@ -130,6 +148,19 @@ module.exports.loop = function () {
     if((Game.time+23)%60==0){
         for(var k in Game.rooms){
             construction.runExtentionBuilder(Game.rooms[k]);
+        }
+    }
+
+    if(Game.time%40==0){
+        for(var k in Game.rooms){
+            var room = Game.rooms[k]
+            if(room.find(FIND_HOSTILE_CREEPS, {
+                filter: function(object) {
+                    return object.owner.username == "Invader";
+                }
+            }).length > 0){
+                room.memory.invadersLastDetected = Game.time;
+            }
         }
     }
 }
