@@ -11,7 +11,7 @@ var roleBuilder = {
 	        creep.memory.isGathering = true;
 	    }
 
-	    if(creep.room.controller.ticksToDowngrade < 2000){
+	    if(creep.room.controller && creep.room.controller.ticksToDowngrade < 2000){
 	    	creep.say("Oh shit", true);
 	    	roleUpgrader.run(creep, true);
 	    	return;
