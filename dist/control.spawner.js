@@ -36,7 +36,7 @@ module.exports = {
         if(room.storage && room.storage.store.energy > 80000){
             desiredBuilders++;
         }
-        if(room.controller.level === 2){
+        if(room.controller.level <= 2){
             desiredBuilders++;
             desiredBuilders++;
         }
@@ -50,7 +50,7 @@ module.exports = {
         }
         
         var spawnRoom = isReservation ? parent : room;
-        
+
         var spawn = this.getSpawnFromRoom(spawnRoom);
         if(!spawn){
             return;
