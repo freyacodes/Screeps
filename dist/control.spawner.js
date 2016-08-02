@@ -112,7 +112,7 @@ module.exports = {
         room.memory.harvesters = harvesters;
         //console.log("Harvesters: "+harvesters)
         
-        console.log(room+":"+claimnants+"/"+desiredClaimnants);
+        //console.log(room+":"+claimnants+"/"+desiredClaimnants);
         
         //console.log(builders+":"+harvesters+":"+upgraders)
         
