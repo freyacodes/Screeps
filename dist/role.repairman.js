@@ -92,6 +92,12 @@ module.exports = {
 	        }
 	        design[design.length] = WORK;
 	        spent = spent + 100;
+
+	        if(spent + 50 > budget){
+	            return design;
+	        }
+	        design[design.length] = MOVE;
+	        spent = spent + 50;
 	    }
 	    
 	    return design;
