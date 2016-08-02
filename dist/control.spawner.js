@@ -38,9 +38,6 @@ module.exports = {
         }
         if(room.controller.level === 2){
             desiredBuilders++;
-        }
-        if(room.controller.level === 3){
-            desiredBuilders++;
             desiredBuilders++;
         }
         
