@@ -13,7 +13,7 @@ var gc = require("control.gc");
 var construction = require("control.construction");
 
 module.exports.loop = function () {
-    PathFinder.use(true)
+    PathFinder.use(true);
     
     //Start with gc checks
     if(Memory.creepsLastTick){
@@ -122,16 +122,17 @@ module.exports.loop = function () {
                             try{
                                 //We were probably wiped out by invaders. Make sure we respawn after 1500 ticks has gone by since the last one to spawn a harvester
                                 var mem = Memory.rooms[room.memory.reservations[i]];
+                                if(!mem){
+                                    mem = {};
+                                }
                                 console.log(k+" "+mem.invadersLastDetected)
-                                if(mem){
-                                    var lastDetected = mem.invadersLastDetected;
-                                    if(lastDetected == null){
-                                        lastDetected = 0;
-                                    }
-                                    if(Game.time - lastDetected > 1500){
-                                        spawner.spawnRole(room.find(FIND_MY_SPAWNS)[0], "harvester", {home:room.memory.reservations[i]}, room.energyCapacityAvailable);
-                                        console.log("Spawned a new harvester in attempt to recover reservation.")
-                                    }
+                                var lastDetected = mem.invadersLastDetected;
+                                if(lastDetected == null){
+                                    lastDetected = 0;
+                                }
+                                if(Game.time - lastDetected > 1500){
+                                    spawner.spawnRole(room.find(FIND_MY_SPAWNS)[0], "harvester", {home:room.memory.reservations[i]}, room.energyCapacityAvailable);
+                                    console.log("Spawned a new harvester in attempt to recover reservation.")
                                 }
                             } catch(err){
                                 console.log("Error while recovering reservation: " + err)
