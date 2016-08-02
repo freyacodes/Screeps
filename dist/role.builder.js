@@ -4,12 +4,17 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-
 	    if(creep.memory.isGathering && creep.carry.energy == creep.carryCapacity) {
             creep.memory.isGathering = false;
 	    }
 	    if(!creep.memory.isGathering && creep.carry.energy == 0) {
 	        creep.memory.isGathering = true;
+	    }
+
+	    if(creep.room.controller.ticksToDowngrade < 2000){
+	    	creep.say("Oh shit", true);
+	    	roleUpgrader.run(creep, true);
+	    	return;
 	    }
 
 	    if(!creep.memory.isGathering) {
