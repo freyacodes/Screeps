@@ -6,7 +6,7 @@ module.exports = {
         //creep.say(creep.memory.home)
         var room = Game.rooms[creep.memory.home];
         if(!room || creep.room.name != creep.memory.home){
-            console.log(creep.name+" could not find it's home room: "+creep.memory.home);
+            //console.log(creep.name+" could not find it's home room: "+creep.memory.home);
             creep.moveTo(new RoomPosition(25, 25, creep.memory.home));
             return;
         }
