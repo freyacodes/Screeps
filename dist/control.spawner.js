@@ -50,15 +50,12 @@ module.exports = {
         }
         
         var spawnRoom = isReservation ? parent : room;
-        var spawners = spawnRoom.find(FIND_MY_SPAWNS, {
-            filter: function(spawn){
-                return !spawn.spawning;
-            }
-        })
-        if(spawners.length == 0){
+        
+        var spawn = this.getSpawnFromRoom(spawnRoom);
+        if(!spawn){
             return;
         }
-        var spawn = spawners[0]
+
         
         //console.log(desiredHarvesters+":"+isReservation);
         var builders = 0;
@@ -171,5 +168,18 @@ module.exports = {
         mem.role = roleName;
         var role = rolesUtil[roleName];
         return spawn.createCreep(role.getDesign(budget), undefined, mem);
+    },
+
+    //Returns a vacant one (if any)
+    getSpawnFromRoom: function(room){
+        if(!room){
+            return;
+        }
+        var spawns = room.find(FIND_MY_SPAWNS, {
+            filter: function(spawn){
+                return !spawn.spawning;
+            }
+        });
+        return spawns[0];
     }
 };
