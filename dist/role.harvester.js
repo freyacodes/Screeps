@@ -48,11 +48,18 @@ var roleHarvester = {
         
 	},
 	
-	getDesign: function(budget){
+	getDesign: function(budget, room){
 	    var design = [MOVE, CARRY, WORK];
 	    var spent = 200;
 	    
-	    budget = Math.min(budget, 550);
+        //If any of our sources are partly blocked, we need more WORK
+        //TODO: Handle when two sources are partly blocked
+        var minimum = 550;
+        if(room && room.memory && room.memory.minerSlots && room.memory.minerSlots % 2 === 1){
+            minimum = minimum + 300;
+        }
+
+	    budget = Math.min(budget, minimum);
 	    
 	    //Add as many WORK as we can
 	    while(spent + 100 <= budget){
