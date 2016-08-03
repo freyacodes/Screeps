@@ -55,7 +55,6 @@ module.exports = {
         if(!spawn){
             return;
         }
-
         
         //console.log(desiredHarvesters+":"+isReservation);
         var builders = 0;
@@ -121,41 +120,22 @@ module.exports = {
         
         //Spawn more creeps if needed
         if (desiredHarvesters > harvesters){
-            spawn.createCreep(roleHarvester.getDesign(budget), undefined,       {role: 'harvester', home: room.name});
+            spawn.createCreep(roleHarvester.getDesign(budget, room), undefined,       {role: 'harvester', home: room.name});
         } else if (desiredCarriers > carriers){
-            spawn.createCreep(roleCarrier.getDesign(budget), undefined,         {role: 'carrier', home: room.name});
+            spawn.createCreep(roleCarrier.getDesign(budget, room), undefined,         {role: 'carrier', home: room.name});
         } else if (desiredBuilders > builders){
-            spawn.createCreep(roleBuilder.getDesign(budget), undefined,         {role: 'builder', home: room.name});
+            spawn.createCreep(roleBuilder.getDesign(budget, room), undefined,         {role: 'builder', home: room.name});
         } else if (desiredUpgraders > upgraders){
-            spawn.createCreep(roleUpgrader.getDesign(budget), undefined,        {role: 'upgrader', home: room.name});
+            spawn.createCreep(roleUpgrader.getDesign(budget, room), undefined,        {role: 'upgrader', home: room.name});
         } else if (desiredClaimnants > claimnants){
-            spawn.createCreep(roleClaimnant.getDesign(budget), undefined,       {role: 'claimnant', home: room.name});
+            spawn.createCreep(roleClaimnant.getDesign(budget, room), undefined,       {role: 'claimnant', home: room.name});
         } else if (desiredWarriors > warriors){
-            spawn.createCreep(roleWarrior.getDesign(budget), undefined,         {role: 'warrior', home: room.name});
+            spawn.createCreep(roleWarrior.getDesign(budget, room), undefined,         {role: 'warrior', home: room.name});
         } else if (desiredRepairmen > repairmen){
-            spawn.createCreep(roleRepairman.getDesign(budget), undefined,       {role: 'repairman', home: room.name});
+            spawn.createCreep(roleRepairman.getDesign(budget, room), undefined,       {role: 'repairman', home: room.name});
         }else if (desiredRoadbuilders > roadbuilders){
-            spawn.createCreep(roleRoadbuilder.getDesign(budget), undefined,     {role: 'roadbuilder', home: room.name});
+            spawn.createCreep(roleRoadbuilder.getDesign(budget, room), undefined,     {role: 'roadbuilder', home: room.name});
         }
-    },
-    
-    getBudget: function(room){
-        var budget = 0;
-        var spawns = room.find(FIND_MY_SPAWNS);
-        var exts = room.find(FIND_MY_STRUCTURES, {
-            filter: function(structure){
-                return structure.structureType == STRUCTURE_EXTENSION;
-            }
-        });
-        
-        if(spawns.length){
-            budget = budget + spawns.length * spawns[0].energyCapacity;
-        }
-        if(exts.length){
-            budget = budget + exts.length * exts[0].energyCapacity;
-        }
-        
-        return budget;
     },
 
     spawnRole: function(spawn, roleName, mem, budget){
