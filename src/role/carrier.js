@@ -14,9 +14,9 @@ module.exports = {
         }
         
         if(!isDefaulting){
-            if(creep.memory.isGathering && creep.carry.energy == creep.carryCapacity){
+            if(creep.memory.isGathering && _.sum(creep.carry) == creep.carryCapacity){
                 creep.memory.isGathering = false;
-            } else if (creep.carry.energy == 0){
+            } else if (_.sum(creep.carry) == 0){
                 creep.memory.isGathering = true;
             }
         }
@@ -26,7 +26,7 @@ module.exports = {
 	            creep.moveTo(new RoomPosition(25, 25, room.name));
 	            return;
 	        } else if(room){
-                var sources = room.find(FIND_DROPPED_ENERGY);
+                var sources = room.find(FIND_DROPPED_RESOURCES);
                 if(creep.pickup(sources[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sources[0]);
                 }
@@ -38,6 +38,9 @@ module.exports = {
             } else {
                 var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                     filter: function(structure){
+                        if(creep.carry.energy === 0){
+                            return false;
+                        }
                         return (structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION  || structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
                         //return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
                     }
@@ -56,7 +59,7 @@ module.exports = {
                         creep.moveTo(target);
                     }
                 } else if(creep.room.storage){
-                    if(creep.transfer(creep.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    if(creep.transferAnyResourceType(creep.room.storage) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(creep.room.storage);
                     }
                 } else {
