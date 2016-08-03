@@ -11,6 +11,7 @@ var spawner = require("control.spawner");
 var inv = require("control.inventory");
 var gc = require("control.gc");
 var construction = require("control.construction");
+var crepUtil = require("util.creep");
 
 module.exports.loop = function () {
     PathFinder.use(true);
