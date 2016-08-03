@@ -40,6 +40,8 @@ module.exports = {
             desiredBuilders++;
             desiredBuilders++;
         }
+
+        desiredCarriers = desiredCarriers + room.getDroppedResourcesTotal() / 750;
         
         if(!isReservation && room.find(FIND_STRUCTURES, {
             filter:function(struct) {
