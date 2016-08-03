@@ -57,6 +57,18 @@ var roleUpgrader = {
 	        }
 	        design[design.length] = CARRY;
 	        spent = spent + 50;
+
+	        if(spent + 50 > budget){
+	            return design;
+	        }
+	        design[design.length] = CARRY;
+	        spent = spent + 50;
+
+	        if(spent + 50 > budget){
+	            return design;
+	        }
+	        design[design.length] = MOVE;
+	        spent = spent + 50;
 	        
 	        if(spent + 100 > budget){
 	            return design;
