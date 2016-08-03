@@ -2,3 +2,4 @@
 /credentials.json
 *.sublime-workspace
 /ScreepsAutocomplete/
+/dist/
