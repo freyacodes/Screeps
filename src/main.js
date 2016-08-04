@@ -13,6 +13,7 @@ var gc = require("control.gc");
 var construction = require("control.construction");
 var creepUtil = require("util.creep");
 var roomUtil = require("util.room");
+var towerStructure = require("control.tower");
 
 module.exports.loop = function () {
     PathFinder.use(true);
@@ -39,28 +40,11 @@ module.exports.loop = function () {
             filter: (structure) => structure.structureType == STRUCTURE_TOWER
         })
         for(var i in towers){
-            var tower = towers[i];
-            if(tower) {
-                var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-                if(closestHostile) {
-                    tower.attack(closestHostile);
-                } else {
-                    var damagedCreeps = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
-                        filter:function(creep) {
-                            return creep.hits < creep.hitsMax
-                        }
-                    });
-                    if(damagedCreeps){
-                        tower.heal(damagedCreeps)
-                    } else {
-                        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                            filter: (structure) => structure.hits < Math.min(10000, structure.hitsMax) && (structure.my || structure.structureType == STRUCTURE_ROAD)
-                        });
-                        if(closestDamagedStructure) {
-                            tower.repair(closestDamagedStructure);
-                        }
-                    }
-                }
+            try{
+                var tower = towers[i];
+                towerStructure.run(tower);
+            } catch(err){
+                console.log("Error occurred when controlling tower in room "+rom+": "+err);
             }
         }
     }
@@ -74,35 +58,41 @@ module.exports.loop = function () {
         /*if(creep.memory.renewing){
             this.renewCreep(creep);
         }else */
-        if(false){
-            creep.moveTo(Game.flags.Rally);
-        }else if(creep.memory.role == 'harvester') {
-            roleHarvester.run(creep);
-            delete creep.memory.renewing;
-        }else if(creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
-            delete creep.memory.renewing;
-        }else if(creep.memory.role == 'builder') {
-            roleBuilder.run(creep);
-            delete creep.memory.renewing;
-        }else if(creep.memory.role == 'carrier') {
-            roleCarrier.run(creep);
-            delete creep.memory.renewing;
-        }else if(creep.memory.role == 'warrior') {
-            roleWarrior.run(creep);
-            delete creep.memory.renewing;
-        }else if(creep.memory.role == 'claimnant') {
-            roleClaimnant.run(creep);
-            delete creep.memory.renewing;
-        }else if(creep.memory.role == 'repairman') {
-            roleRepairman.run(creep);
-            delete creep.memory.renewing;
-        }else if(creep.memory.role == 'roadbuilder') {
-            //creep.say("Road")
-            roleRoadbuilder.run(creep);
-            delete creep.memory.renewing;
-        } else if (creep.memory.role == "spawnbuilder") {
-            roleSpawnbuilder.run(creep)
+        try{
+            if(false){
+                creep.moveTo(Game.flags.Rally);
+            }else if(creep.memory.role == 'harvester') {
+                roleHarvester.run(creep);
+                delete creep.memory.renewing;
+            }else if(creep.memory.role == 'upgrader') {
+                roleUpgrader.run(creep);
+                delete creep.memory.renewing;
+            }else if(creep.memory.role == 'builder') {
+                roleBuilder.run(creep);
+                delete creep.memory.renewing;
+            }else if(creep.memory.role == 'carrier') {
+                roleCarrier.run(creep);
+                delete creep.memory.renewing;
+            }else if(creep.memory.role == 'warrior') {
+                roleWarrior.run(creep);
+                delete creep.memory.renewing;
+            }else if(creep.memory.role == 'claimnant') {
+                roleClaimnant.run(creep);
+                delete creep.memory.renewing;
+            }else if(creep.memory.role == 'repairman') {
+                roleRepairman.run(creep);
+                delete creep.memory.renewing;
+            }else if(creep.memory.role == 'roadbuilder') {
+                //creep.say("Road")
+                roleRoadbuilder.run(creep);
+                delete creep.memory.renewing;
+            } else if (creep.memory.role == "spawnbuilder") {
+                roleSpawnbuilder.run(creep)
+            }
+        } catch(err){
+            console.log("Role error for " + creep.memory.role + " " + creep.name + ": "+err);
+            Game.notify("Role error for " + creep.memory.role + " " + creep.name + ": "+err);
+            creep.say(err);
         }
         //console.log(creep.memory.role + " used " + (Game.cpu.getUsed() - cpu))
         //creep.say(Game.cpu.getUsed() - cpu)
