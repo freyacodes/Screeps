@@ -36,12 +36,19 @@ module.exports = {
         if(room.storage && room.storage.store.energy > 80000){
             desiredBuilders++;
         }
-        if(room.controller.level <= 2){
+        if(room.controller.level <= 3){
             desiredBuilders++;
             desiredBuilders++;
         }
 
-        desiredCarriers = desiredCarriers + room.getDroppedResourcesTotal() / 750;
+
+
+        //Scale our consumption and distribution with the amount of energy on the floor
+        if(!isReservation && room.controller.level <= 3){
+            desiredBuilders = desiredBuilders + room.getDroppedResourcesTotal() / 750;
+        } else {
+            desiredCarriers = desiredCarriers + room.getDroppedResourcesTotal() / 750;
+        }
         
         if(!isReservation && room.find(FIND_STRUCTURES, {
             filter:function(struct) {
