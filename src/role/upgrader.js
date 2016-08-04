@@ -20,7 +20,7 @@ var roleUpgrader = {
                 creep.moveTo(room.controller);
             }
         }
-        else if(room.controller && room.controller.my && room.controller.level > 0){
+        else if(room && room.controller && room.controller.my && room.controller.level > 0){
             var range = creep.pos.getRangeTo(room.controller);
             if(range < 5){
                 creep.upgradeController(room.controller)
