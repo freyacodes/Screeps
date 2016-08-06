@@ -20,4 +20,14 @@ Room.prototype.getDroppedResourcesTotal = function() {
     return count;
 }
 
+Room.prototype.removeDebugFlags = function(room) {
+   var flags = this.lookForAtArea(LOOK_FLAGS, 0, 0, 49, 49, true);
+   for(var i in flags){
+        var flag = flags[i].flag;
+        if(flag.name.startsWith("Debug")){
+            flag.remove();
+        }
+   }
+}
+
 module.exports = module;
