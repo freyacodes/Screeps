@@ -20,7 +20,7 @@ Room.prototype.getDroppedResourcesTotal = function() {
     return count;
 }
 
-Room.prototype.removeDebugFlags = function(room) {
+Room.prototype.removeDebugFlags = function() {
    var flags = this.lookForAtArea(LOOK_FLAGS, 0, 0, 49, 49, true);
    for(var i in flags){
         var flag = flags[i].flag;
@@ -28,6 +28,10 @@ Room.prototype.removeDebugFlags = function(room) {
             flag.remove();
         }
    }
+}
+
+Room.prototype.isMyReservation = function() {
+    return this.memory.reservee != null;
 }
 
 module.exports = module;
