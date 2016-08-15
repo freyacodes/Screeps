@@ -20,7 +20,11 @@ var roleHarvester = {
             creep.say("Target?")
             return;
         }
-        var isPrimitive = reservee == null && creep.room.find(FIND_MY_CREEPS).length <= this.getDesired(creep.room);
+        var isPrimitive = reservee == null && creep.room.find(FIND_MY_CREEPS, {
+        	filter: function(c){
+        		return c.memory.home == creep.memory.home;
+        	}
+        }).length <= this.getDesired(creep.room);
         
         if(creep.carry.energy < creep.carryCapacity) {
             if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
