@@ -3,7 +3,7 @@ module.exports = {
     run: function(room){
         var startCPU = Game.cpu.getUsed();
 
-        if(!room || !room.controller || !room.controller.my || room.controller.level >= 3){
+        if(!room || !room.controller || !room.controller.my || room.controller.level <= 4){
             return;
         }
 
@@ -11,7 +11,7 @@ module.exports = {
             return;
         }
 
-        var startPoint = room.find(FIND_MY_SPAWNS)[1].pos;
+        var startPoint = room.find(FIND_MY_SPAWNS)[0].pos;
         var endPoints = [
             room.controller.pos
         ];
@@ -28,7 +28,7 @@ module.exports = {
             roomCallback: this.createRoadsCostMatrix,
             plainCost: 2,
             swampCost: 9,
-            maxRooms: 3
+            maxRooms: 1
         });
 
         var positions = path.path;
@@ -45,23 +45,27 @@ module.exports = {
             }
 
             if(!isPositionInvalid){
-                pos.placeFlag("Site_"+STRUCTURE_ROAD+"_"+pos);
+                pos.createFlag("Site_"+STRUCTURE_ROAD+"_"+pos);
             }
         }
+
+        console.log("Constructed road with a length of " + positions.length);
 
         var cpuUsage = Game.cpu.getUsed() - startCPU;
     },
 
     createRoadsCostMatrix: function(roomName){
         var room = Game.rooms[roomName];
-        var spawn = room.find(FIND_MY_SPAWNS)[0];
 
-        if(spawn == null){
-            error("No spawn found");
+        var spawnX = 25;
+        var spawnY = 25;
+
+        if(spawn) {
+            var spawn = room.find(FIND_MY_SPAWNS)[0];
+
+            spawnX = spawn.pos.x;
+            spawnY = spawn.pos.y;
         }
-
-        var spawnX = spawn.pos.x;
-        var spawnY = spawn.pos.y;
 
         var costs = new PathFinder.CostMatrix;
         var data = room.lookAtArea(0, 0, 49, 49);
@@ -70,26 +74,32 @@ module.exports = {
             for (y = 0; y < 50; y++) {
                 var tData = data[y][x];
 
-                var structure = this.getTypeFromData(tData, "structure");
+                var structure = module.exports.getTypeFromData(tData, "structure");
 
                 if(structure && structure.structureType == STRUCTURE_ROAD){
-                    console.log("FOUND ROAD AT "+x+","+y+" but really at "+structure.pos);
                     costs.set(x, y, 1);
                     continue;
                 }
 
                 if(structure && structure.structureType != STRUCTURE_RAMPART){
-                    costs.set(x, y, 20);//Somewhere we cannot walk
+                    costs.set(x, y, 30);//Somewhere we cannot walk
                     continue;
                 }
 
-                var site = this.getTypeFromData(tData, "constructionSite");
+                var terrain = module.exports.getTypeFromData(tData, "terrain");
+
+                if(terrain == "wall"){
+                    costs.set(x, y, 30);//Somewhere we cannot walk
+                    continue;
+                }
+
+                var site = module.exports.getTypeFromData(tData, "constructionSite");
 
                 if(site){
                     if(site.structureType == STRUCTURE_ROAD){
                         costs.set(x, y, 1);
                     } else {
-                        costs.set(x, y, 20);
+                        costs.set(x, y, 15);
                     }
                     continue;
                 }
