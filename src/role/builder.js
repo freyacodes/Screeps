@@ -18,18 +18,7 @@ var roleBuilder = {
 	    }
 
 	    if(!creep.memory.isGathering) {
-	        var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-            if(target) {
-                //var target = targets[Math.floor(Math.random()*targets.length)];
-                var code = creep.build(target);
-                //console.log(code)
-                if(code == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
-                }
-            } else {
-                //Whatever, let's work like we are an upgrader
-                roleUpgrader.run(creep, true);
-            }
+	        roleBuilder.runNotGathering(creep);
         }
         else {
             if(creep.room.storage && creep.room.storage.store.energy > 2000){
@@ -44,6 +33,34 @@ var roleBuilder = {
                 }
 	        }
 	    }
+	},
+
+	runNotGathering: function(creep){
+		var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+        if(target) {
+            //var target = targets[Math.floor(Math.random()*targets.length)];
+            var code = creep.build(target);
+            //console.log(code)
+            if(code == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target);
+            }
+        }
+
+        //No target? Check if we can find a flag and place a construction site then
+        var flag = creep.pos.findClosestByRange(FIND_FLAGS, {
+        	filter: function(f){
+        		return f.color == COLOR_YELLOW;
+        	}
+        });
+
+        if(flag) {
+        	flag.pos.createConstructionSite(STRUCTURE_ROAD);
+        	flag.remove();
+        	creep.moveTo(flag);
+        } else {
+            //Whatever, let's work like we are an upgrader
+            roleUpgrader.run(creep, true);
+        }
 	},
 	
 	getDesign: function(budget){
