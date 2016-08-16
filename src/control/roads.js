@@ -44,7 +44,6 @@ module.exports = {
         for(var i in positions){
             var pos = positions[i];
 
-            var isPositionInvalid = false;
             var tileContents = pos.look();
             for(var i in tileContents){
                 if(tileContents.type == "structure" || tileContents.type == "constructionSite"){
@@ -53,9 +52,7 @@ module.exports = {
                 }
             }
 
-            if(!isPositionInvalid){
-                pos.createFlag("Site_"+STRUCTURE_ROAD+"_"+pos, COLOR_YELLOW, COLOR_WHITE);
-            }
+            pos.createFlag("Site_"+STRUCTURE_ROAD+"_"+pos, COLOR_YELLOW, COLOR_WHITE);
         }
 
         console.log("Constructed road with a length of " + positions.length);
