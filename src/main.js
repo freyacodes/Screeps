@@ -11,6 +11,7 @@ var spawner = require("control.spawner");
 var inv = require("control.inventory");
 var gc = require("control.gc");
 var construction = require("control.construction");
+var roads = require("control.roads")
 var creepUtil = require("util.creep");
 var roomUtil = require("util.room");
 var towerStructure = require("control.tower");
@@ -154,6 +155,13 @@ module.exports.loop = function () {
                 room.memory.invadersLastDetected = Game.time;
             }
         }
+    }
+
+    if(Game.time%20==0){
+        //Get random room we have a controller in
+        var room = roomUtil.controllerRooms[Math.floor(Math.random() * roomUtil.controllerRooms.length)];
+        console.log("Running roads algorithm on " + room + "...");
+        roads.run(room);
     }
 }
 
