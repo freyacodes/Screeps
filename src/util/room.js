@@ -1,4 +1,15 @@
-module = {};
+mod = {};
+
+controllerRooms = [];
+
+for(var i in Game.rooms){
+    var room = Game.rooms[i];
+    if(room.controller && room.controller.my){
+        controllerRooms[controllerRooms.length] = room;
+    }
+}
+
+mod.controllerRooms = controllerRooms;
 
 Room.prototype.getDroppedEnergyTotal = function() {
 	var count = 0;
@@ -34,4 +45,4 @@ Room.prototype.isMyReservation = function() {
     return this.memory.reservee != null;
 }
 
-module.exports = module;
+module.exports = mod;
