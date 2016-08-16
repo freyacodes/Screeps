@@ -11,6 +11,15 @@ module.exports = {
             return;
         }
 
+        //If there are any existing construction flags, don't run
+        if(room.find(FIND_FLAGS, {
+            filter: function(flag){
+                return flag.color == COLOR_YELLOW;
+            }
+        }).length != 0){
+            return;
+        }
+
         var startPoint = room.find(FIND_MY_SPAWNS)[0].pos;
         var endPoints = [
             room.controller.pos
