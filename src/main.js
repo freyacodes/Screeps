@@ -102,39 +102,38 @@ module.exports.loop = function () {
     //console.log("roles CPU: " + (Game.cpu.getUsed() - cpuRoles))
     
     if(Game.time%10==0){
-        for(var k in Game.rooms){
-            var room = Game.rooms[k]
-            if(room.controller && room.controller.my){
-                if(room.memory && room.memory.reservations){
-                    for(var i in room.memory.reservations){
-                        var reservation = Game.rooms[room.memory.reservations[i]]
-                        if(reservation){
-                            spawner.run(reservation, true, room);
-                        } else {
-                            try{
-                                //We were probably wiped out by invaders. Make sure we respawn after 1500 ticks has gone by since the last one to spawn a harvester
-                                var mem = Memory.rooms[room.memory.reservations[i]];
-                                if(!mem){
-                                    mem = {};
-                                }
-                                console.log(k+" "+mem.invadersLastDetected)
-                                var lastDetected = mem.invadersLastDetected;
-                                if(lastDetected == null){
-                                    lastDetected = 0;
-                                }
-                                if(Game.time - lastDetected > 1500){
-                                    spawner.spawnRole(room.find(FIND_MY_SPAWNS)[0], "harvester", {home:room.memory.reservations[i]}, room.energyCapacityAvailable);
-                                    console.log("Spawned a new harvester in attempt to recover reservation.")
-                                }
-                            } catch(err){
-                                console.log("Error while recovering reservation: " + err)
+        for(var i in roomUtil.controllerRooms){
+            var room = roomUtil.controllerRooms[i];
+            var k = room.name;
+            if(room.memory && room.memory.reservations){
+                for(var i in room.memory.reservations){
+                    var reservation = Game.rooms[room.memory.reservations[i]]
+                    if(reservation){
+                        spawner.run(reservation, true, room);
+                    } else {
+                        try{
+                            //We were probably wiped out by invaders. Make sure we respawn after 1500 ticks has gone by since the last one to spawn a harvester
+                            var mem = Memory.rooms[room.memory.reservations[i]];
+                            if(!mem){
+                                mem = {};
                             }
+                            console.log(k+" "+mem.invadersLastDetected)
+                            var lastDetected = mem.invadersLastDetected;
+                            if(lastDetected == null){
+                                lastDetected = 0;
+                            }
+                            if(Game.time - lastDetected > 1500){
+                                spawner.spawnRole(room.find(FIND_MY_SPAWNS)[0], "harvester", {home:room.memory.reservations[i]}, room.energyCapacityAvailable);
+                                console.log("Spawned a new harvester in attempt to recover reservation.")
+                            }
+                        } catch(err){
+                            console.log("Error while recovering reservation: " + err)
                         }
                     }
                 }
-                
-                spawner.run(room);//By spawning last, the parent takes priority
             }
+            
+            spawner.run(room);//By spawning last, the parent takes priority
         }
     }
     
