@@ -44,6 +44,7 @@ var roleBuilder = {
             if(code == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target);
             }
+            return;
         }
 
         //No target? Check if we can find a flag and place a construction site then
