@@ -45,7 +45,7 @@ module.exports = {
             }
 
             if(!isPositionInvalid){
-                pos.createFlag("Site_"+STRUCTURE_ROAD+"_"+pos);
+                pos.createFlag("Site_"+STRUCTURE_ROAD+"_"+pos, COLOR_YELLOW, COLOR_WHITE);
             }
         }
 
