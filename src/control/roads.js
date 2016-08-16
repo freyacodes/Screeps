@@ -46,13 +46,15 @@ module.exports = {
 
             var tileContents = pos.look();
             for(var i in tileContents){
-                if(tileContents.type == "structure" || tileContents.type == "constructionSite"){
-                    isPositionInvalid = true;
+                var v = tileContents[i];
+                if(v.type == "structure" || v.type == "constructionSite"){
                     continue;
                 }
             }
 
-            pos.createFlag("Site_"+STRUCTURE_ROAD+"_"+pos, COLOR_YELLOW, COLOR_WHITE);
+            var name = "Site_"+STRUCTURE_ROAD+"_"+pos;
+
+            pos.createFlag(name, COLOR_YELLOW, COLOR_WHITE);
         }
 
         console.log("Constructed road with a length of " + positions.length);
