@@ -45,7 +45,7 @@ module.exports.loop = function () {
                 var tower = towers[i];
                 towerStructure.run(tower);
             } catch(err){
-                console.log("Error occurred when controlling tower in room "+rom+": "+err);
+                console.log("Error occurred when controlling tower in room "+room+": "+err);
             }
         }
     }
@@ -161,56 +161,9 @@ module.exports.loop = function () {
         var room = roomUtil.controllerRooms[Math.floor(Math.random() * roomUtil.controllerRooms.length)];
         console.log("Running roads algorithm on " + room + "...");
         roads.run(room);
-    }
-}
+    },
 
-module.exports.renewRequired = function(creep){
-    var spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
-    if(!spawn || creep.memory.norepair || spawn.spawning){
-        return false;
-    }
-    if(spawn && creep.ticksToLive < 10){
-        var code = spawn.recycleCreep(creep);
-        console.log("Was forced to recycle "+creep.name+"! Code: "+code);
-        return false;
-    }
-    if(creep.ticksToLive < 150 && !spawn.spawning){
-        if(creep.memory.renewing == null){
-            creep.memory.renewing = 100;
-        }
-        creep.say("Renewing")
-        return true;
-    }
-    return false;
-}
+    isExtractorRequired: function(room){
 
-module.exports.renewCreep = function(creep){
-    var spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
-    if(!spawn){
-        try{
-            spawn = Game.rooms[Game.rooms[creep.memory.home].memory.reservee].find(FIND_MY_SPAWNS)[0];
-        }catch(err){}
-    }
-    if(creep.carry.energy > 0){
-        creep.transfer(spawn, RESOURCE_ENERGY)
-    }
-    if(spawn){
-        //console.log(spawn.spawning.needTime)
-        if(spawn.spawning && spawn.spawning.needTime && spawn.spawning.remainingTime < 5){
-            creep.moveTo(Game.flags.Idle)
-            //delete creep.memory.renewing;
-            return
-        }
-        var code = spawn.renewCreep(creep);
-        creep.moveTo(spawn);
-        creep.memory.renewing = creep.memory.renewing - 1;
-        if(creep.memory.renewing <= 0){
-            delete creep.memory.renewing;
-        }
-        if(code == ERR_FULL){
-            delete creep.memory.renewing;
-        } else if (code == OK){
-            creep.memory.renewing = creep.memory.renewing - 4;
-        }
     }
 }
