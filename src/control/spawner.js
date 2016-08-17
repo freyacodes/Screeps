@@ -5,6 +5,7 @@ var roleUpgrader = require("role.upgrader");
 var roleRepairman = require("role.upgrader");
 var roleClaimnant = require("role.claimnant");
 var roleRoadbuilder = require("role.roadbuilder");
+var roleExtractor = require("role.extractor");
 var roleCarrier = require('role.carrier');
 var rolesUtil = require("util.roles")
 
@@ -19,6 +20,7 @@ module.exports = {
         var desiredRepairmen = isReservation ? 0 : 0;
         var desiredClaimnants = isReservation ? 2 : 0;//Note: The are CLAIM body parts, not claimnants
         var desiredRoadbuilders = isReservation ? 1 : 0;
+        var desiredExtractors = 0;
         
         if(room.energyCapacityAvailable == room.energyAvailable && Math.floor(0.5 + Math.random()*99 == 0)){
             //desiredBuilders++;
@@ -57,6 +59,8 @@ module.exports = {
         }).length > 0){
             desiredRepairmen++;
         }
+
+
         
         var spawnRoom = isReservation ? parent : room;
 
@@ -74,6 +78,7 @@ module.exports = {
         var claimnants = 0;
         var repairmen = 0;
         var roadbuilders = 0;
+        var extractors = 0;
         
         //Handle reservation claimnants
         if(isReservation){
@@ -111,19 +116,19 @@ module.exports = {
                     repairmen++;
                 }else if (creep.memory.role == 'roadbuilder') {
                     roadbuilders++;
+                }else if (creep.memory.role == 'extractor') {
+                    extractors++;
                 }
             }
         }
         room.memory.harvesters = harvesters;
-        //console.log("Harvesters: "+harvesters)
         
-        //console.log(room+":"+claimnants+"/"+desiredClaimnants);
-        
-        //console.log(builders+":"+harvesters+":"+upgraders)
-        
-        //desiredCarriers = Math.ceil((desiredHarvesters/3)*1.4);
-        //console.log(roleBuilder.getDesign(this.getBudget(room)))
-        //console.log(roleWarrior.getDesign(this.getBudget(room)));
+        //Would it be desirable to have an extractor?
+        if(extractors == 0){
+            if(this.isExtractorRequired(room)){
+                desiredExtractors++;
+            }
+        }
         
         var budget = spawn.room.find(FIND_MY_CREEPS).length == 0 || harvesters == 0 ? Math.max(300, spawn.room.energyAvailable) : spawn.room.energyCapacityAvailable;
         
@@ -144,8 +149,26 @@ module.exports = {
             spawn.createCreep(roleRepairman.getDesign(budget, room), undefined,       {role: 'repairman', home: room.name});
         }else if (desiredRoadbuilders > roadbuilders){
             spawn.createCreep(roleRoadbuilder.getDesign(budget, room), undefined,     {role: 'roadbuilder', home: room.name});
+        }else if (desiredExtractors > extractors){
+            spawn.createCreep(roleExtractor.getDesign(budget, room), undefined,       {role: 'extractor', home: room.name});
         }
     },
+
+    isExtractorRequired: function(room){
+        if(CONTROLLER_STRUCTURES[STRUCTURE_EXTRACTOR][room.controller.level] === 0){
+            return false;
+        }
+
+        var mineral = room.find(FIND_MINERALS)[0];
+
+        if(room.storage == null
+            || room.storage[mineral.mineralType] > STORAGE_CAPACITY * 0.5
+            || _.sum(room.storage.store) > STORAGE_CAPACITY * 0.8){
+            return false;
+        }
+
+        return true;
+    }, 
 
     spawnRole: function(spawn, roleName, mem, budget){
         if(!mem){

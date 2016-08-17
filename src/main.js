@@ -7,6 +7,7 @@ var roleRepairman = require('role.repairman');
 var roleClaimnant = require("role.claimnant");
 var roleRoadbuilder = require("role.roadbuilder");
 var roleSpawnbuilder = require("role.spawnbuilder");
+var roleExtractor = require("role.extractor");
 var spawner = require("control.spawner");
 var inv = require("control.inventory");
 var gc = require("control.gc");
@@ -89,6 +90,8 @@ module.exports.loop = function () {
                 delete creep.memory.renewing;
             } else if (creep.memory.role == "spawnbuilder") {
                 roleSpawnbuilder.run(creep)
+            } else if (creep.memory.role == "extractor") {
+                roleExtractor.run(creep)
             }
         } catch(err){
             console.log("Role error for " + creep.memory.role + " " + creep.name + ": "+err);
@@ -161,9 +164,5 @@ module.exports.loop = function () {
         var room = roomUtil.controllerRooms[Math.floor(Math.random() * roomUtil.controllerRooms.length)];
         console.log("Running roads algorithm on " + room + "...");
         roads.run(room);
-    },
-
-    isExtractorRequired: function(room){
-
     }
 }
