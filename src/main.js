@@ -15,6 +15,7 @@ var construction = require("control.construction");
 var roads = require("control.roads")
 var creepUtil = require("util.creep");
 var roomUtil = require("util.room");
+var gameUtil = require("util.game");
 var towerStructure = require("control.tower");
 
 module.exports.loop = function () {
