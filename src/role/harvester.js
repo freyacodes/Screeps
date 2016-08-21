@@ -29,7 +29,6 @@ var roleHarvester = {
         
         if(creep.carry.energy < creep.carryCapacity) {
 
-            creep.say(creep.isOnChokepoint())
             if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target);
             } else if(creep.isOnChokepoint()) {
