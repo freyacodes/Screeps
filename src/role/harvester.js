@@ -15,8 +15,9 @@ var roleHarvester = {
             return;
         }
         var target = inv.getMiningSource(room, creep);
+        
         if(!target){
-            //creep.moveTo(25, 25, creep.memory.home);
+            creep.moveTo(25, 25, room);
             creep.say("Target?")
             return;
         }
