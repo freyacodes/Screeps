@@ -21,4 +21,16 @@ Creep.prototype.transferAnyResourceType = function(target) {
 	return ERR_NOT_ENOUGH_RESOURCES;
 };
 
+Creep.prototype.isOnChokepoint = function() {
+	for(var i in Memory.chokepoints){
+		var pos = Memory.chokepoints[i];
+		pos = new RoomPosition(pos[0], pos[1], pos[2]);
+		if(this.pos.isEqualTo(pos)){
+			return true;
+		}
+	}
+
+	return false;
+};
+
 module.exports = module;

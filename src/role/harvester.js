@@ -28,9 +28,14 @@ var roleHarvester = {
         }).length <= this.getDesired(creep.room);
         
         if(creep.carry.energy < creep.carryCapacity) {
+
+            creep.say(creep.isOnChokepoint())
             if(creep.harvest(target) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target);
+            } else if(creep.isOnChokepoint()) {
+                creep.move(Math.floor(Math.random() * 8));
             }
+
             //creep.say("Harvesting")
         }else{
             if(isPrimitive){
