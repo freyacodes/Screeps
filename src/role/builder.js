@@ -19,8 +19,7 @@ var roleBuilder = {
 
 	    if(!creep.memory.isGathering) {
 	        roleBuilder.runNotGathering(creep);
-        }
-        else {
+        } else {
             if(creep.room.storage && creep.room.storage.store.energy > 2000){
                 if(creep.room.storage.transfer(creep, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.storage);
@@ -28,8 +27,13 @@ var roleBuilder = {
             } else {
                 var sources = creep.room.find(FIND_DROPPED_ENERGY);
                 //creep.say(sources.length)
-                if(creep.pickup(sources[0]) == ERR_NOT_IN_RANGE) {
+
+                var code = creep.pickup(sources[0])
+
+                if(code == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sources[0]);
+                } else if (code != OK){
+                	creep.moveTo(new RoomPosition(25, 25, creep.room.name));
                 }
 	        }
 	    }
