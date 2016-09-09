@@ -17,6 +17,7 @@ var creepUtil = require("util.creep");
 var roomUtil = require("util.room");
 var gameUtil = require("util.game");
 var towerStructure = require("control.tower");
+var exitObserver = require("control.exitObserver");
 
 module.exports.loop = function () {
     PathFinder.use(true);
@@ -166,4 +167,6 @@ module.exports.loop = function () {
         console.log("Running roads algorithm on " + room + "...");
         roads.run(room);
     }
+
+    exitObserver.run();
 }
