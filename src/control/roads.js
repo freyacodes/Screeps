@@ -20,6 +20,10 @@ module.exports = {
             return;
         }
 
+        var spawns = room.find(FIND_MY_SPAWNS);
+        if(spawns.length == 0){
+            return;
+        }
         var startPoint = room.find(FIND_MY_SPAWNS)[0].pos;
         var endPoints = [
             room.controller.pos
